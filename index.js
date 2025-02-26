@@ -8,8 +8,9 @@ app.use(cors())
 app.use(express.json())
 require('dotenv').config()
 
-// MONGODB
 
+
+// MONGODB
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_User}:${process.env.DB_Pass}@cluster0.bho7r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 
@@ -24,8 +25,18 @@ const client = new MongoClient(uri, {
 
 async function run() {
   try {
-    
-    
+
+    const usersCollection = client.db('Task-Manager').collection('users')
+
+    app.post('/users',async(req,res)=>{
+      const user = req.body;
+      const result = await usersCollection.insertOne(user)
+      res.send(result)
+    })
+    app.get('/users',async(req,res)=>{
+      const result = await usersCollection.find().toArray()
+      res.send(result)
+    })
  
   } finally {
     
